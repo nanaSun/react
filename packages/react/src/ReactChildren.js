@@ -21,6 +21,7 @@ const SUBSEPARATOR = ':';
 
 /**
  * Escape and wrap key so it is safe to use as a reactid
+ * 包装key，这样可以安全地作为reactid来使用
  *
  * @param {string} key to be escaped.
  * @return {string} the escaped key.
@@ -41,6 +42,7 @@ function escape(key) {
 /**
  * TODO: Test that a single child and an array with one item have the same key
  * pattern.
+ * TODO: 测试单一组件和只有一个项目的数组拥有相同过的key模式
  */
 
 let didWarnAboutMaps = false;
@@ -134,6 +136,8 @@ function traverseAllChildrenImpl(
       children,
       // If it's the only child, treat the name as if it was wrapped in an array
       // so that it's consistent if the number of children grows.
+      // 如果只有一个子元素，把名字当作包含在数组中一般
+      // 如果子元素数量增加，他也是一直的
       nameSoFar === '' ? SEPARATOR + getComponentKey(children, 0) : nameSoFar,
     );
     return 1;
@@ -142,6 +146,7 @@ function traverseAllChildrenImpl(
   let child;
   let nextName;
   let subtreeCount = 0; // Count of children found in the current subtree.
+  // 当前子树下子元素的数量
   const nextNamePrefix =
     nameSoFar === '' ? SEPARATOR : nameSoFar + SUBSEPARATOR;
 
@@ -161,6 +166,7 @@ function traverseAllChildrenImpl(
     if (typeof iteratorFn === 'function') {
       if (__DEV__) {
         // Warn about using Maps as children
+        // 将Map当作子元素的警告
         if (iteratorFn === children.entries) {
           warning(
             didWarnAboutMaps,
@@ -211,7 +217,8 @@ function traverseAllChildrenImpl(
 /**
  * Traverses children that are typically specified as `props.children`, but
  * might also be specified through attributes:
- *
+ * 遍历子元素，通常指`props.children`，但是也有可能指属性
+ * 
  * - `traverseAllChildren(this.props.children, ...)`
  * - `traverseAllChildren(this.props.leftPanelChildren, ...)`
  *
@@ -234,23 +241,29 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 /**
  * Generate a key string that identifies a component within a set.
+ * 生成一个key字符串，指向一个组件
  *
  * @param {*} component A component that could contain a manual key.
+ * 一个组件要包含一个手动指定的key
  * @param {number} index Index that is used if a manual key is not provided.
+ * 如果没有提供手动指定的key，则使用index
  * @return {string}
  */
 function getComponentKey(component, index) {
   // Do some typechecking here since we call this blindly. We want to ensure
   // that we don't block potential future ES APIs.
+  // 因为我们是盲目地调用，所以做一些typechecking。我们希望能确保没有阻隔潜在的未来ES API。
   if (
     typeof component === 'object' &&
     component !== null &&
     component.key != null
   ) {
     // Explicit key
+    // 明确的key
     return escape(component.key);
   }
   // Implicit key determined by the index in the set
+  // 在这一组中，不明确的key就用index确定
   return index.toString(36);
 }
 
@@ -348,11 +361,14 @@ function mapChildren(children, func, context) {
 /**
  * Count the number of children that are typically specified as
  * `props.children`.
+ * 计算被指定为`props.children`的子元素数量
  *
  * See https://reactjs.org/docs/react-api.html#reactchildrencount
  *
  * @param {?*} children Children tree container.
+ * 子元素树容器
  * @return {number} The number of children.
+ * 子元素数量
  */
 function countChildren(children) {
   return traverseAllChildren(children, () => null, null);
@@ -373,16 +389,20 @@ function toArray(children) {
 /**
  * Returns the first child in a collection of children and verifies that there
  * is only one child in the collection.
+ * 返回子组件集合中第一个子组件，并且验证这是集合中唯一的子组件
  *
  * See https://reactjs.org/docs/react-api.html#reactchildrenonly
  *
  * The current implementation of this function assumes that a single child gets
  * passed without a wrapper, but the purpose of this helper function is to
  * abstract away the particular structure of children.
+ * 当前的实现方法是假定单独一个组件不通过wrapper传递，但是这个帮助函数的目的是将子组件的特殊结构抽象出来。
  *
  * @param {?object} children Child collection structure.
+ * 子元素集合结构
  * @return {ReactElement} The first and only `ReactElement` contained in the
  * structure.
+ * 第一个而且只有`ReactElement`包含在结构之中。
  */
 function onlyChild(children) {
   invariant(

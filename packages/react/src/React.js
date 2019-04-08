@@ -98,7 +98,6 @@ const React = {
 };
 
 // Note: some APIs are added with feature flags.
-<<<<<<< HEAD
 // 小贴士：有些API添加了一些特别共功能标记
 // Make sure that stable builds for open source
 // 以确保对于开源是稳定的
@@ -106,11 +105,6 @@ const React = {
 // 不要为了避免deopts而修改React对象
 // Also let's not expose their names in stable builds.
 // 同样不要再稳定版本中暴露他们的名字
-=======
-// Make sure that stable builds for open source
-// don't modify the React object to avoid deopts.
-// Also let's not expose their names in stable builds.
->>>>>>> fb6b50871b2f0d846f63a51af7ce620ce6b73e48
 
 if (enableStableConcurrentModeAPIs) {
   React.ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
